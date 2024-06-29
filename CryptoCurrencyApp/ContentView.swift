@@ -8,14 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var viewModel = CryptoDataViewModel()
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            VStack {
+                if let errorMessage = viewModel.errorMessage {
+                    Text("Error \(errorMessage)")
+                        .foregroundColor(.red)
+                }
+                
+                
+                List(viewModel.cryptoData) { crypto in
+                    VStack(alignment: .leading) {
+                        Text(crypto.name)
+                            .font(.headline)
+                        Text("Symbol: \(crypto.symbol)")
+                        Text("Price: \(crypto.price_usd) USD")
+                        Text("24h Change: \(crypto.percent_change_24h)%")
+                        Text("7d Change: \(crypto.percent_change_7d)%")
+                        Text("Market Cap: \(crypto.market_cap_usd) USD")
+                    }
+                }
+                .navigationTitle("Cryptocurrency Data")
+            }
         }
-        .padding()
     }
 }
 
